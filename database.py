@@ -1,14 +1,11 @@
-import pymongo, json, random, string, datetime
+import pymongo, json, random, string, datetime, os
 
-with open("hidden.json", "r+") as file:
-	hidden = json.load(file)
-URI = hidden['mongo']
+URI = os.environ['mongo']
 
 
 client = pymongo.MongoClient(URI)
 db = client["expense-tracker"]
 dbusers = db["users"]
-
 
 
 
