@@ -1,0 +1,106 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+	<h1>Transactions</h1>
+	<div class="row">
+		<div class="col-12 col-md-7">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="mb-1">All Transactions</h4>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-5">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="mb-1">Add Transaction</h4>
+					<form id="addTransactionForm">
+					  <div class="form-group">
+				        <label for="nameField">Name</label>
+				        <input type="email" class="form-control" id="nameField" placeholder="Transaction Name">
+				      </div>
+					  <div class="form-row">
+					    <div class="form-group col-md-6">
+					      <label for="amountField">Amount</label>
+					      <input type="number" class="form-control" id="amountField" placeholder="Amount">
+					    </div>
+					    <div class="form-group col-md-6">
+					      <label for="typeField">Type</label>
+					      <select class="form-control">
+					      	<option>Spent</option>
+					      	<option>Income</option>
+					      </select>
+					    </div>
+					  </div>
+					  <div class="form-row">
+					    <div class="form-group col-md-6">
+					      <label for="dayField">Date</label>
+					      <input id="dateField" class="form-control">
+					      <script>
+						    $('#dateField').datepicker({
+						        uiLibrary: 'bootstrap4'
+						    });
+						  </script>
+					    </div>
+					    <div class="form-group col-md-6">
+					    	<div class="form-group">
+					          <label for="categoryField">Category</label>
+					          <input type="text" class="form-control" id="categoryField" placeholder="Category" list="categories">
+					          <datalist id="categories">
+								  <option value="subscriptions">
+								  <option value="work">
+								  <option value="food & drink">
+							  </datalist>
+					        </div>
+					    </div>
+					  </div>
+
+					  <button type="submit" class="btn btn-primary">Add Transaction</button>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function loadTransactionsToDom(transactions) {
+		// load transactions into dom
+		// for each transaction add an eventListener
+		console.log(transactions)
+	}
+
+	function addTransaction(data) {
+		// add transaction, update DOM w/ post response
+		fetch('http://localhost:5000/api/addtransaction',{
+				method: "post",
+				body: data
+			})
+		.then(response => response.json())
+		.then(data => {
+			loadTransactionsToDom(data)
+		});
+	}
+
+	function editTransaction(data) {
+		// edit transaction, update DOM w/ post response
+	}
+
+	fetch('http://localhost:5000/api/recenttransactions')
+	.then(response => response.json())
+	.then(data => {
+		loadTransactionsToDom(data)
+	});
+
+	const form = document.querySelector('#addTransactionForm')
+	form.addEventListener('submit', event => {
+		// submit event detected
+		event.preventDefault()
+		data = $(form).serialize()
+		addTransaction()
+	})
+</script>
+
+
+{% endblock %}
