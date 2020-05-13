@@ -32,6 +32,33 @@
 				<div class="card-body">
 					<h4 class="mb-1">Balance Overview</h4>
 					<canvas id="balanceChart" width="400" height="250"></canvas>
+					<script type="text/javascript">
+						Chart.defaults.global.defaultFontColor = 'rgba(255, 255, 255, 0.5)';
+						var ctx = document.getElementById('balanceChart').getContext('2d');
+						var myChart = new Chart(ctx, {
+							type: 'line',
+							data: {
+								labels: ["January", "February", "March", "April", "May", "June", "July"],
+								datasets: [{
+									label: "Balance",
+									backgroundColor: "rgba(40, 167, 69, 1)",
+									borderColor: "rgba(40, 167, 69, 1)",
+									data: [65, 59, 80, 81, 56, 55, 40],
+									fill: false,
+								}],
+							},
+							options: {
+
+								scales: {
+									yAxes: [{
+										ticks: {
+											beginAtZero: false
+										}
+									}]
+								}
+							}
+						});
+					</script>
 				</div>
 			</div>
 		</div>
@@ -50,37 +77,6 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	Chart.defaults.global.defaultFontColor = 'rgba(255, 255, 255, 0.5)';
-	var ctx = document.getElementById('balanceChart').getContext('2d');
-	var myChart = new Chart(ctx, {
-	    type: 'line',
-	    data: {
-	        labels:["January","February","March","April","May","June","July"],
-	        datasets:[
-	            {
-	                label: "Balance",
-	                backgroundColor: "rgba(40, 167, 69, 1)",
-	                borderColor: "rgba(40, 167, 69, 1)",
-	                data: [65,59,80,81,56,55,40],
-	                fill: false,
-	            }
-	        ],
-	    },
-	    options: {
 
-	        scales: {
-	            yAxes: [{
-	                ticks: {
-	                    beginAtZero: false
-	                }
-	            }]
-	        }
-	    }
-	});
-
-	
-
-</script>
 
 {% endblock %}

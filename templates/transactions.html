@@ -64,43 +64,4 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	function loadTransactionsToDom(transactions) {
-		// load transactions into dom
-		// for each transaction add an eventListener
-		console.log(transactions)
-	}
-
-	function addTransaction(data) {
-		// add transaction, update DOM w/ post response
-		fetch('http://localhost:5000/api/addtransaction',{
-				method: "post",
-				body: data
-			})
-		.then(response => response.json())
-		.then(data => {
-			loadTransactionsToDom(data)
-		});
-	}
-
-	function editTransaction(data) {
-		// edit transaction, update DOM w/ post response
-	}
-
-	fetch('http://localhost:5000/api/recenttransactions')
-	.then(response => response.json())
-	.then(data => {
-		loadTransactionsToDom(data)
-	});
-
-	const form = document.querySelector('#addTransactionForm')
-	form.addEventListener('submit', event => {
-		// submit event detected
-		event.preventDefault()
-		data = $(form).serialize()
-		addTransaction()
-	})
-</script>
-
-
 {% endblock %}

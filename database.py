@@ -1,6 +1,6 @@
 import pymongo, json, random, string, datetime, os
 
-URI = os.environ['mongo']
+URI = os.environ['EXPENSE_MONGO']
 
 
 client = pymongo.MongoClient(URI)
