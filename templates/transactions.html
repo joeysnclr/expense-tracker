@@ -1,0 +1,174 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+	<h1>Transactions</h1>
+	<div class="row">
+		<div class="col-12 col-md-7">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="mb-3">All Transactions</h4>
+					<table class="table table-dark">
+						<thead>
+							<tr>
+								<th scope="col">Name</th>
+								<th scope="col">Date</th>
+								<th scope="col">Category</th>
+								<th scope="col">$</th>
+								<th scope="col"></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for t in content['transactions'] %}
+							<tr>
+								<td>{{t['name']}}</td>
+								<td>{{t['date'].strftime("%b %d, %Y")}}</td>
+								<td>{{t['category']}}</td>
+								{% if t['tType'] == "spent" %}
+								<td class="text-danger"><b>-${{t['amount']}}</b></td>
+								{% else %}
+								<td class="text-success"><b>+${{t['amount']}}</b></td>
+								{% endif %}
+								<td>
+									<a href="/deletetransaction/{{t['tId']}}"><i class="far fa-trash-alt"></i></a>
+									<a href="#" onclick="$('#edit{{t['tId']}};').toggle()"><i
+											class="fas fa-edit"></i></a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="100%" id="edit{{t['tId']}}" style="display: none;">
+									<h6 class="mb-1">Edit Transaction</h6>
+									<form action="/edittransaction" method="POST" autocomplete="off">
+										<input hidden type="text" name="tId" value="{{t['tId']}}">
+										<!-- Name -->
+										<div class="form-group">
+											<label for="nameField">Name</label>
+											<input required name="name" type="text" class="form-control" id="nameField"
+												placeholder="Transaction Name" value="{{t['name']}}">
+										</div>
+										<div class="form-row">
+											<!-- Amount -->
+											<div class="form-group col-md-6">
+												<label for="amountField">Amount</label>
+												<div class="input-group">
+													<div class="input-group-prepend">
+														<span class="input-group-text" id="currency-addon">$</span>
+													</div>
+													<input required name="amount" type="number" class="form-control"
+														id="amountField" placeholder="Amount"
+														aria-describedby="currency-addon" step=".01"
+														value="{{t['amount']}}">
+												</div>
+
+											</div>
+											<!-- Type -->
+											<div class=" form-group col-md-6">
+												<label for="typeField">Type</label>
+												<select required name="tType" class="form-control">
+													{% if t['tType'] == "spent" %}
+													<option value="spent" selected>Spent</option>
+													<option value="income">Income</option>
+													{% else %}
+													<option value="spent">Spent</option>
+													<option value="income" selected>Income</option>
+													{% endif %}
+												</select>
+											</div>
+										</div>
+										<div class="form-row">
+											<!-- Date -->
+											<div class="form-group col-md-6">
+												<label for="dayField">Date</label>
+												<input required name="date" class="form-control dateField"
+													value="{{t['date'].strftime('%m/%d/%Y')}}">
+											</div>
+											<!-- Category -->
+											<div class=" form-group col-md-6">
+												<div class="form-group">
+													<label for="categoryField">Category</label>
+													<input required name="category" type="text" class="form-control"
+														id="categoryField" placeholder="Category" list="categories"
+														value="{{t['category']}}">
+													<datalist id="categories">
+														{% for c in content['categories'] %}
+														<option value="{{c}}"></option>
+														{% endfor %}
+													</datalist>
+												</div>
+											</div>
+										</div>
+										<button type="submit" class="btn btn-primary">Edit Transaction</button>
+									</form>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-5">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="mb-3">Add Transaction</h4>
+					<form action="/addtransaction" method="POST" autocomplete="off">
+						<!-- Name -->
+						<div class="form-group">
+							<label for="nameField">Name</label>
+							<input required name="name" type="text" class="form-control" id="nameField"
+								placeholder="Transaction Name">
+						</div>
+						<div class="form-row">
+							<!-- Amount -->
+							<div class="form-group col-md-6">
+								<label for="amountField">Amount</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="currency-addon">$</span>
+									</div>
+									<input required name="amount" type="number" class="form-control" id="amountField"
+										placeholder="Amount" aria-describedby="currency-addon" step=".01">
+								</div>
+
+							</div>
+							<!-- Type -->
+							<div class=" form-group col-md-6">
+								<label for="typeField">Type</label>
+								<select required name="tType" class="form-control">
+									<option value="spent">Spent</option>
+									<option value="income">Income</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-row">
+							<!-- Date -->
+							<div class="form-group col-md-6">
+								<label for="dayField">Date</label>
+								<input required name="date" class="form-control dateField">
+							</div>
+							<!-- Category -->
+							<div class=" form-group col-md-6">
+								<div class="form-group">
+									<label for="categoryField">Category</label>
+									<input required name="category" type="text" class="form-control" id="categoryField"
+										placeholder="Category" list="categories">
+									<datalist id="categories">
+										{% for c in content['categories'] %}
+										<option value="{{c}}"></option>
+										{% endfor %}
+									</datalist>
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Add Transaction</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<script>
+	$('.dateField').datepicker();
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+	<h1>Dashboard</h1>
+	<div class="row">
+		<div class="col-12 col-md-4 mb-3 mb-md-0">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="mb-1">Good Morning!</h4>
+					<h5 class="mb-2">You have ${{content['balance']['balance']}}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">
+						<script type="text/javascript">
+							document.write(currentDateString());
+						</script>
+					</h6>
+					<hr class="bg-light">
+					<h6>Recent Transactions</h6>
+					{% if content['transactions'] != [] %}
+					{% for t in content['transactions'][:4] %}
+					<div class="d-flex flex-row justify-content-between">
+						<div>
+							<p class="mb-0">{{t['name']}}</p>
+							<p class="small text-muted">{{t['date'].strftime("%b %d, %Y")}} | {{t['category']}}</p>
+						</div>
+						{% if t['tType'] == "spent" %}
+						<p class="text-danger"><b>-${{t['amount']}}</b></p>
+						{% else %}
+						<p class="text-success"><b>+${{t['amount']}}</b></p>
+						{% endif %}
+					</div>
+					{% endfor %}
+					<a href="/transactions">View All</a>
+					{% else %}
+					<p class="mb-0">You haven't added any transactions yet.</p>
+					<a href="/transactions">Click here to start!</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-8 mb-3 mb-md-0">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="mb-1">Balance Overview</h4>
+					<canvas id="balanceChart" width="400" height="250"></canvas>
+					<script type="text/javascript">
+						Chart.defaults.global.defaultFontColor = 'rgba(255, 255, 255, 0.5)';
+						var ctx = document.getElementById('balanceChart').getContext('2d');
+						var myChart = new Chart(ctx, {
+							type: 'line',
+							data: {
+								labels: ["January", "February", "March", "April", "May", "June", "July"],
+								datasets: [{
+									label: "Balance",
+									backgroundColor: "rgba(40, 167, 69, 1)",
+									borderColor: "rgba(40, 167, 69, 1)",
+									data: [65, 59, 80, 81, 56, 55, 40],
+									fill: false,
+								}],
+							},
+							options: {
+
+								scales: {
+									yAxes: [{
+										ticks: {
+											beginAtZero: false
+										}
+									}]
+								}
+							}
+						});
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-2 pb-2 d-flex flex-row flex-nowrap">
+		<div class="col-3">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="card-title">month year</h4>
+					<h5 class="card-title"><span class="small text-muted">Spent</span> $spent this month</h5>
+					<h5 class="card-title"><span class="small text-muted">Income</span> $income this month</h5>
+					<a href="" class="card-text">More Details...</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+{% endblock %}

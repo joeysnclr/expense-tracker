@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+	<h1></h1>
+	<div class="row">
+		<div class="col-3">
+			
+		</div>
+		<div class="col-12 col-md-9 mb-3 mb-md-0">
+			<div class="card bg-dark border-dark text-white">
+				<div class="card-body">
+					<h4 class="mb-1"></h4>
+					<canvas id="breakdownChart" width="400" height="250"></canvas>
+					<script type="text/javascript">
+						// initialize chart
+						var ctx = document.getElementById('breakdownChart').getContext('2d')
+						var myChart = new Chart(ctx, {
+							type: 'line',
+							data: {
+								datasets: [{
+									data: [10, 20, 30]
+								}],
+
+								// These labels appear in the legend and in the tooltips when hovering different arcs
+								labels: [
+									'Red',
+									'Yellow',
+									'Blue'
+								]
+							}
+						})
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+{% endblock %}
