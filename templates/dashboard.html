@@ -44,7 +44,7 @@
 					<canvas id="balanceChart" width="400" height="250"></canvas>
 
 					<script type="text/javascript">
-						fetch('http://localhost:5000/api/balance_data')
+						fetch(window.location.origin + '/api/balance_data')
 							.then(response => response.json())
 							.then(data => {
 								if (data.success) {
