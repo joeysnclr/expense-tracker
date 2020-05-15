@@ -42,32 +42,56 @@
 				<div class="card-body">
 					<h4 class="mb-1">Balance Overview</h4>
 					<canvas id="balanceChart" width="400" height="250"></canvas>
-					<script type="text/javascript">
-						Chart.defaults.global.defaultFontColor = 'rgba(255, 255, 255, 0.5)';
-						var ctx = document.getElementById('balanceChart').getContext('2d');
-						var myChart = new Chart(ctx, {
-							type: 'line',
-							data: {
-								labels: ["January", "February", "March", "April", "May", "June", "July"],
-								datasets: [{
-									label: "Balance",
-									backgroundColor: "rgba(40, 167, 69, 1)",
-									borderColor: "rgba(40, 167, 69, 1)",
-									data: [65, 59, 80, 81, 56, 55, 40],
-									fill: false,
-								}],
-							},
-							options: {
 
-								scales: {
-									yAxes: [{
-										ticks: {
-											beginAtZero: false
+					<script type="text/javascript">
+						fetch('http://localhost:5000/api/balance_data')
+							.then(response => response.json())
+							.then(data => {
+								if (data.success) {
+									Chart.defaults.global.defaultFontColor = 'rgba(255, 255, 255, 0.5)';
+									var ctx = document.getElementById('balanceChart').getContext('2d');
+									var myChart = new Chart(ctx, {
+										type: 'line',
+										data: {
+											datasets: [{
+												label: 'Balance',
+												backgroundColor: "#28a745",
+												borderColor: "#28a745",
+												fill: false,
+												data: data.data,
+											}]
+										},
+										options: {
+											responsive: true,
+											scales: {
+												xAxes: [{
+													type: 'time',
+													display: true,
+													scaleLabel: {
+														display: true,
+														labelString: 'Date'
+													},
+													ticks: {
+														major: {
+															fontStyle: 'bold',
+															fontColor: '#FF0000'
+														}
+													}
+												}],
+												yAxes: [{
+													display: true,
+													scaleLabel: {
+														display: true,
+														labelString: 'value'
+													}
+												}]
+											}
 										}
-									}]
+									});
+								} else {
+									console.log(data.error)
 								}
-							}
-						});
+							})
 					</script>
 				</div>
 			</div>

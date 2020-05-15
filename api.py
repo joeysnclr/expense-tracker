@@ -128,6 +128,37 @@ class User():
 
         return months
 
+    def getBalanceData(self):
+        transactions = self.getTransactionsSortedByDate()
+        balanceCounter = 0
+        balances = []
+        dates = []
+        for t in transactions[::-1]:
+            if t['tType'] == "income":
+                balanceCounter += t['amount']
+            else:
+                balanceCounter -= t['amount']
+            if t['date'] in dates:
+                # override balance for this date with new
+                index = dates.index(t['date'])
+                balances[index] = balanceCounter
+            else:
+                dates.append(t['date'])
+                balances.append(balanceCounter)
+        # format datetime objects to string
+        datesFormatted = []
+        for d in dates:
+            datesFormatted.append(d.strftime("%Y-%m-%d"))
+
+        dataList = []
+        for i in range(len(dates)):
+            point = {
+                "x": dates[i],
+                "y": balances[i]
+            }
+            dataList.append(point)
+        return dataList
+
     def getCategories(self):
         transactions = self.getTransactionsSortedByDate()
         categories = []

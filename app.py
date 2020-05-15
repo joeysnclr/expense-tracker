@@ -8,6 +8,15 @@ app = Flask(__name__)
 app.secret_key = os.urandom(32)
 port = int(os.environ.get('PORT', 5000))
 
+API_NOT_LOGGED_IN = {
+    "success": False,
+    "error": "User not logged in."
+}
+API_PARAMETER_NOT_FOUND = {
+    "success": False,
+    "error": "Parameter not found."
+}
+
 
 @app.before_request
 def before_request():
@@ -150,6 +159,38 @@ def editTransaction():
 
     g.user.editTransaction(tId, amount, date, tType, category, name)
     return redirect(url_for("transactions"))
+
+# API routes for data that needs to be loaded with Javascript
+
+
+# TESTED, WORKING
+@app.route('/api/balance_data')
+def apiBalanceData():
+    if not session.get('loggedIn', False):
+        return jsonify(API_NOT_LOGGED_IN)
+    balanceData = g.user.getBalanceData()
+    response = {
+        "success": True,
+        "data": balanceData
+    }
+    return jsonify(response)
+
+# NOT TESTED!
+
+
+@app.route('/api/breakdown_data/<string:monthId>')
+def apiBreakdownData(monthId):
+    if not session.get('loggedIn', False):
+        return jsonify(API_NOT_LOGGED_IN)
+    breakdowns = g.user.getMonthlyBreakdowns()
+    if monthId in breakdowns:
+        response = {
+            "success": True,
+            "data": breakdowns[monthId]
+        }
+        return jsonify(response)
+    else:
+        return jsonify(API_PARAMETER_NOT_FOUND)
 
 
 app.run(host='0.0.0.0', port=port, debug=True)
