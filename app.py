@@ -102,11 +102,16 @@ def transactions():
     return render_template('transactions.html', content=content)
 
 
-@app.route('/breakdown')
-def breakdown():
+@app.route('/breakdown/<string:tType>/<string:monthId>')
+def breakdown(tType, monthId):
     if not session.get('loggedIn', False):
         return redirect(url_for('login'))
-    return render_template('breakdown.html')
+    content = {
+        "breakdowns": g.user.getMonthlyBreakdowns(),
+        "monthId": monthId,
+        "tType": tType
+    }
+    return render_template('breakdown.html', content=content)
 
 # logged in actions
 
@@ -163,8 +168,6 @@ def editTransaction():
 
 # API routes for data that needs to be loaded with Javascript
 
-
-# TESTED, WORKING
 @app.route('/api/balance_data')
 def apiBalanceData():
     if not session.get('loggedIn', False):
@@ -176,18 +179,16 @@ def apiBalanceData():
     }
     return jsonify(response)
 
-# NOT TESTED!
 
-
-@app.route('/api/breakdown_data/<string:monthId>')
-def apiBreakdownData(monthId):
+@app.route('/api/breakdown_data/<string:tType>/<string:monthId>')
+def apiBreakdownData(tType, monthId):
     if not session.get('loggedIn', False):
         return jsonify(API_NOT_LOGGED_IN)
     breakdowns = g.user.getMonthlyBreakdowns()
     if monthId in breakdowns:
         response = {
             "success": True,
-            "data": breakdowns[monthId]
+            "data": breakdowns[monthId][tType]
         }
         return jsonify(response)
     else:

@@ -1,34 +1,52 @@
 {% extends 'layout.html' %}
 {% block body %}
 <div class="container">
-	<h1></h1>
+	<h1>Breakdown</h1>
 	<div class="row">
-		<div class="col-3">
-			
+		<div class="col-12 col-md-3">
+			{% for b in content['breakdowns'] %}
+			<div class="col-12 mb-3">
+				<div class="card bg-dark border-dark text-white">
+					<div class="card-body">
+						<h4 class="card-title">{{b}}</h4>
+						<h5 class="card-title"><a href="/breakdown/spent/{{b}}"><span class="small text-muted">Spent</span>
+							${{content['breakdowns'][b]['spent']['total']|round}}</a></h5>
+						<h5 class="card-title"><a href="/breakdown/income/{{b}}"><span class="small text-muted">Income</span>
+								${{content['breakdowns'][b]['income']['total']|round}}</a></h5>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
 		</div>
 		<div class="col-12 col-md-9 mb-3 mb-md-0">
 			<div class="card bg-dark border-dark text-white">
 				<div class="card-body">
-					<h4 class="mb-1"></h4>
+					<h4 class="mb-1">{{content.tType.title()}} {{content.monthId}}</h4>
 					<canvas id="breakdownChart" width="400" height="250"></canvas>
 					<script type="text/javascript">
-						// initialize chart
-						var ctx = document.getElementById('breakdownChart').getContext('2d')
-						var myChart = new Chart(ctx, {
-							type: 'line',
-							data: {
-								datasets: [{
-									data: [10, 20, 30]
-								}],
-
-								// These labels appear in the legend and in the tooltips when hovering different arcs
-								labels: [
-									'Red',
-									'Yellow',
-									'Blue'
-								]
-							}
-						})
+						fetch(window.location.origin + '/api/breakdown_data/{{content.tType}}/{{content.monthId}}')
+							.then(response => response.json())
+							.then(data => {
+								if (data.data.categories.length == 0) {
+									return
+								}
+								else if (data.success) {
+									console.log(data)
+									var ctx = document.getElementById('breakdownChart').getContext('2d');
+									var myDoughnutChart = new Chart(ctx, {
+										type: 'doughnut',
+										data: {
+											datasets: [{
+												data: data.data.categoryTotals
+											}],
+											backgroundColor: ["#2ecc71", "#3498db", "#9b59b6", "#34495e", "#f1c40f", "#e67e22", "#e74c3c", "#1abc9c"],
+											labels: data.data.categories
+										}
+									});
+								} else {
+									console.log(data.error)
+								}
+							})
 					</script>
 				</div>
 			</div>
