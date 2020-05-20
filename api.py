@@ -125,6 +125,7 @@ class User():
                 categoryIndex = months[m][t['tType']
                                           ]['categories'].index(t['category'])
                 months[m][t['tType']]['categoryTotals'][categoryIndex] += t['amount']
+            months[m][t['tType']]['total'] += t['amount']
 
         return months
 

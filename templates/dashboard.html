@@ -98,16 +98,18 @@
 		</div>
 	</div>
 	<div class="row mt-2 pb-2 d-flex flex-row flex-nowrap">
-		<div class="col-3">
+		{% for b in content['breakdowns'] %}
+		<div class="col-12 col-sm-6 col-md-3">
 			<div class="card bg-dark border-dark text-white">
 				<div class="card-body">
-					<h4 class="card-title">month year</h4>
-					<h5 class="card-title"><span class="small text-muted">Spent</span> $spent this month</h5>
-					<h5 class="card-title"><span class="small text-muted">Income</span> $income this month</h5>
+					<h4 class="card-title">{{b}}</h4>
+					<h5 class="card-title"><span class="small text-muted">Spent</span> ${{content['breakdowns'][b]['spent']['total']|round}}</h5>
+					<h5 class="card-title"><span class="small text-muted">Income</span> ${{content['breakdowns'][b]['income']['total']|round}}</h5>
 					<a href="" class="card-text">More Details...</a>
 				</div>
 			</div>
 		</div>
+		{% endfor %}
 	</div>
 </div>
 

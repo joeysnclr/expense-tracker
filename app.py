@@ -85,7 +85,8 @@ def dashboard():
         return redirect(url_for('login'))
     content = {
         "balance": g.user.getBalance(),
-        "transactions": g.user.getTransactionsSortedByDate()
+        "transactions": g.user.getTransactionsSortedByDate(),
+        "breakdowns": g.user.getMonthlyBreakdowns()
     }
     return render_template('dashboard.html', content=content)
 
