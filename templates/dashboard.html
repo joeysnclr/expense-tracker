@@ -48,7 +48,6 @@
 							.then(response => response.json())
 							.then(data => {
 								if (data.success) {
-									Chart.defaults.global.defaultFontColor = 'rgba(255, 255, 255, 0.5)';
 									var ctx = document.getElementById('balanceChart').getContext('2d');
 									var myChart = new Chart(ctx, {
 										type: 'line',
